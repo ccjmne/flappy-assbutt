@@ -5,60 +5,25 @@
 
 const Phaser = require('phaser');
 
-// %%
-
-
-/**
- *
- * Game configurations.
- * @name configurations
- */
 const configurations = {
   type: Phaser.AUTO,
   width: 288,
   height: 512,
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: {
-        y: 300
-      },
-      debug: false
-    }
-  },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update
-  }
-}
+  physics: { default: 'arcade', arcade: { gravity: { y: 300 }, debug: false } },
+  scene: { preload: preload, create: create, update: update }
+};
 
-/**
- *  Game assets.
- *  @name assets
- */
 const assets = {
-  bird: {
-    red: 'bird-red',
-  },
+  assbutt: 'assbutt',
   obstacle: {
     pipe: {
-      green: {
-        top: 'pipe-green-top',
-        bottom: 'pipe-green-bottom'
-      },
-      red: {
-        top: 'pipe-red-top',
-        bottom: 'pipe-red-bo'
-      }
+      green: { top: 'pipe-green-top', bottom: 'pipe-green-bottom' },
+      red: { top: 'pipe-red-top', bottom: 'pipe-red-bo' }
     }
   },
   scene: {
     width: 144,
-    background: {
-      day: 'background-day',
-      night: 'background-night'
-    },
+    background: ['background-1', 'background-2', 'background-3', 'background-4', 'background-5', 'background-6', 'background-7', 'background-8'],
     ground: 'ground',
     gameOver: 'game-over',
     restart: 'restart-button',
@@ -79,182 +44,101 @@ const assets = {
     number9: 'number9'
   },
   animation: {
-    bird: {
-      red: {
-        clapWings: 'red-clap-wings',
-        stop: 'red-stop'
-      }
-    },
-    ground: {
-      moving: 'moving-ground',
-      stop: 'stop-ground'
-    }
+    assbutt: { clapWings: 'red-clap-wings', stop: 'red-stop' },
+    ground: { moving: 'moving-ground', stop: 'stop-ground' }
   }
 };
 
-// Game
-/**
- * The main controller for the entire Phaser game.
- * @name game
- * @type {object}
- */
-const game = new Phaser.Game(configurations)
-/**
- * If it had happened a game over.
- * @type {boolean}
- */
-let gameOver
-/**
- * If the game has been started.
- * @type {boolean}
- */
-let gameStarted
-/**
- * Up button component.
- * @type {object}
- */
-let upButton
-/**
- * Restart button component.
- * @type {object}
- */
-let restartButton
-/**
- * Game over banner component.
- * @type {object}
- */
-let gameOverBanner
-/**
- * Message initial component.
- * @type {object}
- */
-let messageInitial
-// Bird
-/**
- * Player component.
- * @type {object}
- */
-let player
-/**
- * Bird name asset.
- * @type {string}
- */
-let birdName
-/**
- * Quantity frames to move up.
- * @type {number}
- */
-let framesMoveUp
-// Background
-/**
- * Day background component.
- * @type {object}
- */
-let backgroundDay
-/**
- * Night background component.
- * @type {object}
- */
-let backgroundNight
-/**
- * Ground component.
- * @type {object}
- */
-let ground
-// pipes
-/**
- * Pipes group component.
- * @type {object}
- */
-let pipesGroup
-/**
- * Gaps group component.
- * @type {object}
- */
-let gapsGroup
-/**
- * Counter till next pipes to be created.
- * @type {number}
- */
-let nextPipes
-/**
- * Current pipe asset.
- * @type {object}
- */
-let currentPipe
-// score variables
-/**
- * Scoreboard group component.
- * @type {object}
- */
-let scoreboardGroup
-/**
- * Score counter.
- * @type {number}
- */
-let score
+const game = new Phaser.Game(configurations);
 
-/**
- *   Load the game assets.
- */
+let gameOver;
+let gameStarted;
+
+let upButton;
+let restartButton;
+let gameOverBanner;
+let messageInitial;
+
+let player;
+
+// Quantity frames to move up.
+let framesMoveUp;
+
+let background;
+let ground;
+let pipesGroup;
+let gapsGroup;
+
+let nextPipes;
+let currentPipe;
+
+let scoreboardGroup;
+let score;
+
 function preload() {
   // Backgrounds and ground
-  this.load.image(assets.scene.background.day, 'assets/late-morning.png');
-  this.load.image(assets.scene.background.night, 'assets/evening.png');
-  this.load.spritesheet(assets.scene.ground, 'assets/ground-sprite.png', { frameWidth: 336, frameHeight: 112 })
+  this.load.image(assets.scene.background[0], 'assets/bg1.png');
+  this.load.image(assets.scene.background[1], 'assets/bg2.png');
+  this.load.image(assets.scene.background[2], 'assets/bg3.png');
+  this.load.image(assets.scene.background[3], 'assets/bg4.png');
+  this.load.image(assets.scene.background[4], 'assets/bg5.png');
+  this.load.image(assets.scene.background[5], 'assets/bg6.png');
+  this.load.image(assets.scene.background[6], 'assets/bg7.png');
+  this.load.image(assets.scene.background[7], 'assets/bg8.png');
+
+  // this.load.image(assets.scene.background.day, 'assets/late-morning.png');
+  // this.load.image(assets.scene.background.night, 'assets/evening.png');
+  this.load.spritesheet(assets.scene.ground, 'assets/ground-sprite.png', { frameWidth: 336, frameHeight: 112 });
 
   // Pipes
-  this.load.image(assets.obstacle.pipe.green.top, 'assets/pipe-green-top.png')
-  this.load.image(assets.obstacle.pipe.green.bottom, 'assets/pipe-green-bottom.png')
-  this.load.image(assets.obstacle.pipe.red.top, 'assets/pipe-red-top.png')
-  this.load.image(assets.obstacle.pipe.red.bottom, 'assets/pipe-red-bottom.png')
+  this.load.image(assets.obstacle.pipe.green.top, 'assets/pipe-green-top.png');
+  this.load.image(assets.obstacle.pipe.green.bottom, 'assets/pipe-green-bottom.png');
+  this.load.image(assets.obstacle.pipe.red.top, 'assets/pipe-red-top.png');
+  this.load.image(assets.obstacle.pipe.red.bottom, 'assets/pipe-red-bottom.png');
 
   // Start game
-  this.load.image(assets.scene.messageInitial, 'assets/message-initial2.png')
+  this.load.image(assets.scene.messageInitial, 'assets/message-initial2.png');
 
   // End game
-  this.load.image(assets.scene.gameOver, 'assets/gameover.png')
-  this.load.image(assets.scene.restart, 'assets/restart-button.png')
+  this.load.image(assets.scene.gameOver, 'assets/gameover.png');
+  this.load.image(assets.scene.restart, 'assets/restart-button.png');
 
-  // Birds
-  this.load.spritesheet(assets.bird.red, 'assets/assbutt-base2.png', { frameWidth: 64, frameHeight: 64 })
+  // Assbutt
+  this.load.spritesheet(assets.assbutt, 'assets/assbutt-sprite.png', { frameWidth: 64, frameHeight: 64 });
 
   // Numbers
-  this.load.image(assets.scoreboard.number0, 'assets/number0.png')
-  this.load.image(assets.scoreboard.number1, 'assets/number1.png')
-  this.load.image(assets.scoreboard.number2, 'assets/number2.png')
-  this.load.image(assets.scoreboard.number3, 'assets/number3.png')
-  this.load.image(assets.scoreboard.number4, 'assets/number4.png')
-  this.load.image(assets.scoreboard.number5, 'assets/number5.png')
-  this.load.image(assets.scoreboard.number6, 'assets/number6.png')
-  this.load.image(assets.scoreboard.number7, 'assets/number7.png')
-  this.load.image(assets.scoreboard.number8, 'assets/number8.png')
-  this.load.image(assets.scoreboard.number9, 'assets/number9.png')
+  this.load.image(assets.scoreboard.number0, 'assets/number0.png');
+  this.load.image(assets.scoreboard.number1, 'assets/number1.png');
+  this.load.image(assets.scoreboard.number2, 'assets/number2.png');
+  this.load.image(assets.scoreboard.number3, 'assets/number3.png');
+  this.load.image(assets.scoreboard.number4, 'assets/number4.png');
+  this.load.image(assets.scoreboard.number5, 'assets/number5.png');
+  this.load.image(assets.scoreboard.number6, 'assets/number6.png');
+  this.load.image(assets.scoreboard.number7, 'assets/number7.png');
+  this.load.image(assets.scoreboard.number8, 'assets/number8.png');
+  this.load.image(assets.scoreboard.number9, 'assets/number9.png');
 }
 
 /**
  *   Create the game objects (images, groups, sprites and animations).
  */
 function create() {
-  backgroundDay = this.add.image(assets.scene.width, 256, assets.scene.background.day).setInteractive()
-  backgroundDay.on('pointerdown', moveBird)
-  backgroundNight = this.add.image(assets.scene.width, 256, assets.scene.background.night).setInteractive()
-  backgroundNight.visible = false
-  backgroundNight.on('pointerdown', moveBird)
+  background = this.add.image(0, 0, assets.scene.background[0]).setOrigin(0, 0).setInteractive();
+  background.on('pointerdown', flap);
 
-  gapsGroup = this.physics.add.group()
-  pipesGroup = this.physics.add.group()
-  scoreboardGroup = this.physics.add.staticGroup()
+  gapsGroup = this.physics.add.group();
+  pipesGroup = this.physics.add.group();
+  scoreboardGroup = this.physics.add.staticGroup();
 
-  ground = this.physics.add.sprite(assets.scene.width, 458, assets.scene.ground)
-  ground.setCollideWorldBounds(true)
-  ground.setDepth(10)
+  ground = this.physics.add.sprite(assets.scene.width, 458, assets.scene.ground);
+  ground.setCollideWorldBounds(true);
+  ground.setDepth(10);
 
-  messageInitial = this.add.image(0, 0, assets.scene.messageInitial).setOrigin(0, 0)
-  messageInitial.setDepth(30)
-  messageInitial.visible = false
+  messageInitial = this.add.image(0, 0, assets.scene.messageInitial).setOrigin(0, 0);
+  messageInitial.setDepth(30);
+  messageInitial.visible = false;
 
-  upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
+  upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
   // Ground animations
   this.anims.create({
@@ -262,74 +146,77 @@ function create() {
     frames: this.anims.generateFrameNumbers(assets.scene.ground, { start: 0, end: 2 }),
     frameRate: 15,
     repeat: -1
-  })
+  });
   this.anims.create({
     key: assets.animation.ground.stop,
     frames: [{ key: assets.scene.ground, frame: 0 }],
     frameRate: 20
-  })
+  });
 
-  // Red Bird Animations
+  // Assbutt Animations
   this.anims.create({
-    key: assets.animation.bird.red.clapWings,
-    frames: this.anims.generateFrameNumbers(assets.bird.red, { start: 32, end: 35 }),
+    key: assets.animation.assbutt.clapWings,
+    frames: this.anims.generateFrameNumbers(assets.assbutt, { start: 0, end: 3 }),
     frameRate: 10,
     repeat: -1
-  })
+  });
   this.anims.create({
-    key: assets.animation.bird.red.stop,
-    frames: this.anims.generateFrameNumbers(assets.bird.red, { start: 32, end: 32 }),
+    key: assets.animation.assbutt.stop,
+    frames: this.anims.generateFrameNumbers(assets.assbutt, { start: 0, end: 0 }),
     frameRate: 20
-  })
+  });
 
-  prepareGame(this)
+  prepareGame(this);
 
-  gameOverBanner = this.add.image(assets.scene.width, 206, assets.scene.gameOver)
-  gameOverBanner.setDepth(20)
-  gameOverBanner.visible = false
+  gameOverBanner = this.add.image(assets.scene.width, 206, assets.scene.gameOver);
+  gameOverBanner.setDepth(20);
+  gameOverBanner.visible = false;
 
-  restartButton = this.add.image(assets.scene.width, 300, assets.scene.restart).setInteractive()
-  restartButton.on('pointerdown', restartGame)
-  restartButton.setDepth(20)
-  restartButton.visible = false
+  restartButton = this.add.image(assets.scene.width, 300, assets.scene.restart).setInteractive();
+  restartButton.on('pointerdown', restartGame);
+  restartButton.setDepth(20);
+  restartButton.visible = false;
 }
 
 /**
  *  Update the scene frame by frame, responsible for move and rotate the bird and to create and move the pipes.
  */
 function update() {
-  if (gameOver || !gameStarted)
-    return
+  if (gameOver || !gameStarted) {
+    return;
+  }
 
-  if (framesMoveUp > 0)
-    framesMoveUp--
-  else if (Phaser.Input.Keyboard.JustDown(upButton))
-    moveBird()
-  else {
-    player.setVelocityY(120)
+  if (framesMoveUp > 0) {
+    framesMoveUp--;
+  } else if (Phaser.Input.Keyboard.JustDown(upButton)) {
+    flap();
+  } else {
+    player.setVelocityY(120);
 
-    if (player.angle < 90)
-      player.angle += 1
+    if (player.angle < 90) {
+      player.angle += 1;
+    }
   }
 
   pipesGroup.children.iterate(function (child) {
-    if (child == undefined)
-      return
-
-    if (child.x < -50)
-      child.destroy()
-    else
-      child.setVelocityX(-100)
+    if (child === undefined) {
+      return;
+    }
+    if (child.x < -50) {
+      child.destroy();
+    } else {
+      child.setVelocityX(-100);
+    }
   })
 
   gapsGroup.children.iterate(function (child) {
-    child.body.setVelocityX(-100)
-  })
+    child.body.setVelocityX(-100);
+  });
 
-  nextPipes++
+  nextPipes++;
   if (nextPipes === 130) {
-    makePipes(game.scene.scenes[0])
-    nextPipes = 0
+    makePipes(game.scene.scenes[0]);
+    nextPipes = 0;
   }
 }
 
@@ -338,16 +225,16 @@ function update() {
  *  @param {object} player - Game object that collided, in this case the bird.
  */
 function hitBird(player) {
-  this.physics.pause()
+  this.physics.pause();
 
-  gameOver = true
-  gameStarted = false
+  gameOver = true;
+  gameStarted = false;
 
-  player.anims.play(assets.animation.bird.red.stop)
-  ground.anims.play(assets.animation.ground.stop)
+  player.anims.play(assets.animation.assbutt.stop);
+  ground.anims.play(assets.animation.ground.stop);
 
-  gameOverBanner.visible = true
-  restartButton.visible = true
+  gameOverBanner.visible = true;
+  restartButton.visible = true;
 }
 
 /**
@@ -356,21 +243,12 @@ function hitBird(player) {
  *   @param {object} gap - Game object that was overlapped, in this case the gap.
  */
 function updateScore(_, gap) {
-  score++
-  gap.destroy()
+  gap.destroy();
 
-  if (score % 5 == 0) {
-    backgroundDay.visible = !backgroundDay.visible
-    backgroundNight.visible = !backgroundNight.visible
+  background.setTexture(assets.scene.background[++score % 8]);
+  currentPipe = score % 8 >= 5 && score % 8 <= 7 ? assets.obstacle.pipe.red : assets.obstacle.pipe.green;
 
-    if (currentPipe === assets.obstacle.pipe.green) {
-      currentPipe = assets.obstacle.pipe.red
-    } else {
-      currentPipe = assets.obstacle.pipe.green
-    }
-  }
-
-  updateScoreboard()
+  updateScoreboard();
 }
 
 /**
@@ -378,54 +256,56 @@ function updateScore(_, gap) {
  * @param {object} scene - Game scene.
  */
 function makePipes(scene) {
-  if (!gameStarted || gameOver) return
+  if (!gameStarted || gameOver) {
+    return;
+  }
 
-  const pipeTopY = Phaser.Math.Between(-120, 120)
+  const pipeTopY = Phaser.Math.Between(-120, 120);
 
-  const gap = scene.add.line(288, pipeTopY + 210, 0, 0, 0, 98)
-  gapsGroup.add(gap)
-  gap.body.allowGravity = false
-  gap.visible = false
+  const gap = scene.add.line(288, pipeTopY + 210, 0, 0, 0, 98);
+  gapsGroup.add(gap);
+  gap.body.allowGravity = false;
+  gap.visible = false;
 
-  const pipeTop = pipesGroup.create(288, pipeTopY, currentPipe.top)
-  pipeTop.body.allowGravity = false
+  const pipeTop = pipesGroup.create(288, pipeTopY, currentPipe.top);
+  pipeTop.body.allowGravity = false;
 
-  const pipeBottom = pipesGroup.create(288, pipeTopY + 420, currentPipe.bottom)
-  pipeBottom.body.allowGravity = false
+  const pipeBottom = pipesGroup.create(288, pipeTopY + 420, currentPipe.bottom);
+  pipeBottom.body.allowGravity = false;
 }
 
 /**
  * Move the bird in the screen.
  */
-function moveBird() {
+function flap() {
   if (gameOver) {
     return;
   }
 
   if (!gameStarted) {
-    startGame(game.scene.scenes[0])
+    startGame(game.scene.scenes[0]);
   }
 
-  player.setVelocityY(-400)
-  player.angle = -15
-  framesMoveUp = 5
+  player.setVelocityY(-400);
+  player.angle = -15;
+  framesMoveUp = 5;
 }
 
 /**
  * Update the game scoreboard.
  */
 function updateScoreboard() {
-  scoreboardGroup.clear(true, true)
+  scoreboardGroup.clear(true, true);
 
-  const scoreAsString = score.toString()
-  if (scoreAsString.length == 1)
-    scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.base + score).setDepth(10)
-  else {
-    let initialPosition = assets.scene.width - ((score.toString().length * assets.scoreboard.width) / 2)
+  const scoreAsString = score.toString();
+  if (scoreAsString.length === 1) {
+    scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.base + score).setDepth(10);
+  } else {
+    let initialPosition = assets.scene.width - ((score.toString().length * assets.scoreboard.width) / 2);
 
     for (let i = 0; i < scoreAsString.length; i++) {
-      scoreboardGroup.create(initialPosition, 30, assets.scoreboard.base + scoreAsString[i]).setDepth(10)
-      initialPosition += assets.scoreboard.width
+      scoreboardGroup.create(initialPosition, 30, assets.scoreboard.base + scoreAsString[i]).setDepth(10);
+      initialPosition += assets.scoreboard.width;
     }
   }
 }
@@ -435,18 +315,18 @@ function updateScoreboard() {
  * Clean all groups, hide game over objects and stop game physics.
  */
 function restartGame() {
-  pipesGroup.clear(true, true)
-  pipesGroup.clear(true, true)
-  gapsGroup.clear(true, true)
-  scoreboardGroup.clear(true, true)
-  player.destroy()
-  gameOverBanner.visible = false
-  restartButton.visible = false
+  pipesGroup.clear(true, true);
+  pipesGroup.clear(true, true);
+  gapsGroup.clear(true, true);
+  scoreboardGroup.clear(true, true);
+  player.destroy();
+  gameOverBanner.visible = false;
+  restartButton.visible = false;
 
-  const gameScene = game.scene.scenes[0]
-  prepareGame(gameScene)
+  const gameScene = game.scene.scenes[0];
+  prepareGame(gameScene);
 
-  gameScene.physics.resume()
+  gameScene.physics.resume();
 }
 
 /**
@@ -454,31 +334,29 @@ function restartGame() {
  * @param {object} scene - Game scene.
  */
 function prepareGame(scene) {
-  framesMoveUp = 0
-  nextPipes = 0
-  currentPipe = assets.obstacle.pipe.green
-  score = 0
-  gameOver = false
-  backgroundDay.visible = true
-  backgroundNight.visible = false
-  messageInitial.visible = true
+  framesMoveUp = 0;
+  nextPipes = 0;
+  currentPipe = assets.obstacle.pipe.green;
+  score = 0;
+  gameOver = false;
+  messageInitial.visible = true;
+  background.setTexture(assets.scene.background[0]);
 
-  birdName = assets.bird.red
-  player = scene.physics.add.sprite(60, 265, birdName)
+  player = scene.physics.add.sprite(60, 265, assets.assbutt);
   const bWidth = 28,
     bHeight = 20;
   player.body.setSize(bWidth, bHeight);
   player.body.setOffset((65 - bWidth) / 2, (64 - bHeight) / 2 + (64 - 57));
-  player.setCollideWorldBounds(true)
-  player.anims.play(assets.animation.bird.red.clapWings, true)
-  player.body.allowGravity = false
+  player.setCollideWorldBounds(true);
+  player.anims.play(assets.animation.assbutt.clapWings, true);
+  player.body.allowGravity = false;
 
-  scene.physics.add.collider(player, ground, hitBird, null, scene)
-  scene.physics.add.collider(player, pipesGroup, hitBird, null, scene)
+  scene.physics.add.collider(player, ground, hitBird, null, scene);
+  scene.physics.add.collider(player, pipesGroup, hitBird, null, scene);
 
-  scene.physics.add.overlap(player, gapsGroup, updateScore, null, scene)
+  scene.physics.add.overlap(player, gapsGroup, updateScore, null, scene);
 
-  ground.anims.play(assets.animation.ground.moving, true)
+  ground.anims.play(assets.animation.ground.moving, true);
 }
 
 /**
@@ -486,11 +364,11 @@ function prepareGame(scene) {
  * @param {object} scene - Game scene.
  */
 function startGame(scene) {
-  gameStarted = true
-  messageInitial.visible = false
+  gameStarted = true;
+  messageInitial.visible = false;
 
-  const score0 = scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.number0)
-  score0.setDepth(20)
+  const score0 = scoreboardGroup.create(assets.scene.width, 30, assets.scoreboard.number0);
+  score0.setDepth(20);
 
-  makePipes(scene)
+  makePipes(scene);
 }
