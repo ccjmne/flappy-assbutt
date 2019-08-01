@@ -97,7 +97,7 @@ function preload() {
   this.load.image(assets.obstacle.pipe.red.bottom, 'assets/pipe-red-bottom.png');
 
   // Start game
-  this.load.image(assets.scene.messageInitial, 'assets/message-initial2.png');
+  this.load.image(assets.scene.messageInitial, 'assets/message-initial.png');
 
   // End game
   this.load.image(assets.scene.gameOver, 'assets/gameover.png');
