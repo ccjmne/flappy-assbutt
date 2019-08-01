@@ -1,0 +1,45 @@
+{
+  "name": "flappy-assbutt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "analyze": "webpack --mode production --analyze",
+    "build": "webpack --mode production",
+    "dev": "webpack-dev-server --mode development --content-base dist --port 8001 --history-api-fallback",
+    "start": "npm run dev"
+  },
+  "author": "Eric NICOLAS (ccjmne) <ccjmne@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "css-loader": "^3.1.0",
+    "expose-loader": "^0.7.5",
+    "file-loader": "^4.1.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "image-webpack-loader": "^5.0.0",
+    "imagemin-webpack-plugin": "^2.4.2",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "sass-resources-loader": "^2.0.1",
+    "script-ext-html-webpack-plugin": "^2.1.4",
+    "style-loader": "^0.23.1",
+    "svg-url-loader": "^3.0.0",
+    "url-loader": "^2.1.0",
+    "webfontloader": "^1.6.28",
+    "webpack": "^4.38.0",
+    "webpack-bundle-analyzer": "^3.4.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "dependencies": {
+    "phaser": "^3.18.1",
+  }
+}
