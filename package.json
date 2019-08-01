@@ -1,6 +1,6 @@
 {
   "name": "flappy-assbutt",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "FlappyBird clone using Phaser 3, for GISH 2019 ",
   "main": "index.js",
   "scripts": {
