@@ -465,8 +465,8 @@ function prepareGame(scene) {
 
   birdName = assets.bird.red
   player = scene.physics.add.sprite(60, 265, birdName)
-  const bWidth = 38,
-    bHeight = 30;
+  const bWidth = 28,
+    bHeight = 20;
   player.body.setSize(bWidth, bHeight);
   player.body.setOffset((65 - bWidth) / 2, (64 - bHeight) / 2 + (64 - 57));
   player.setCollideWorldBounds(true)
